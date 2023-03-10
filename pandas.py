@@ -1,39 +1,43 @@
-!pip install pycoingecko
-!pip install plotly
-!pip install mplfinance
-!pip install --upgrade nbformat
-
+# ibm-course
+# Data Science Fundamentals with Python and SQL
 import pandas as pd
-import numpy as np
-import plotly.graph_objects as go
-from plotly.offline import plot
-import matplotlib.pyplot as plt
-import datetime
-from pycoingecko import CoinGeckoAPI
-from mplfinance.original_flavor import candlestick2_ohlc 
 
-cg = CoinGeckoAPI()
+# Define a dictionary 'x'
 
+x = {'Name': ['Rose','John', 'Jane', 'Mary'], 'ID': [1, 2, 3, 4], 'Department': ['Architect Group', 'Software Group', 'Design Team', 'Infrastructure'],
+      'Salary':[100000, 80000, 50000, 60000]}
 
-bitcoin_data = cg.get_coin_market_chart_by_id(id='bitcoin', vs_currency='usd', days=30)
+# casting the dictionary to a DataFrame
+df = pd.DataFrame(x)
 
-type(bitcoin_data )
-bitcoin_price_data = bitcoin_data['prices']
+# display the result df
+print(df)
 
-bitcoin_price_data[0:5]
-data = pd.DataFrame(bitcoin_price_data, columns=['TimeStamp', 'Price'])
+# Retrieving the "ID" column and assigning it to a variable x
+x = df[['ID']]
+print(x)
 
-data['date'] = data['TimeStamp'].apply(lambda d: datetime.date.fromtimestamp(d/1000.0))
+# check the type of x
+print(type(x))
 
-candlestick_data = data.groupby(data.date, as_index=False).agg({"Price": ['min', 'max', 'first', 'last']})
+# Retrieving the Department, Salary and ID columns and assigning it to a variable z
+z = df[['Department','Salary','ID']]
+print(z)
 
-fig = go.Figure(data=[go.Candlestick(x=candlestick_data['date'],
-                open=candlestick_data['Price']['first'], 
-                high=candlestick_data['Price']['max'],
-                low=candlestick_data['Price']['min'], 
-                close=candlestick_data['Price']['last'])
-                ])
+df2=df
+df2=df2.set_index("Name")
+# To display the first 5 rows of new dataframe
+df2.head()
 
-fig.update_layout(xaxis_rangeslider_visible=False)
+# Now, let us access the column using the name
+print(df2.loc['Jane', 'Salary'])
 
-fig.show()
+# let us do the slicing using old dataframe df
+print(df.iloc[0:2, 0:3])
+
+# let us do the slicing using loc() function on old dataframe df where index column is having labels as 0,1,2
+print(df.loc[0:2,'ID':'Department'])
+
+# let us do the slicing using loc() function on new dataframe df2
+# where index column is Name having labels: Rose, John and Jane
+print(df2.loc['Rose':'Jane', 'ID':'Department'])
